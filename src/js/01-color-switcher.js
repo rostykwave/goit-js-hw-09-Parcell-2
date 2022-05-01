@@ -16,11 +16,15 @@ function onStartClick(){
     timerId = setInterval(() => {
         refs.body.style.backgroundColor = getRandomHexColor();
     }, 1000);
+
+    refs.start.setAttribute('disabled',true);
 }
 
 
 function onStopClick() {
     clearInterval(timerId);
+    
+    refs.start.removeAttribute('disabled');
 }
 
 function getRandomHexColor() {
