@@ -2,11 +2,17 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
 const refs = {
-    start: document.querySelector('button[data-start]')
+    start: document.querySelector('button[data-start]'),
+    days: document.querySelector('span[data-days]'),
+    hours: document.querySelector('span[data-hours]'),
+    minutes: document.querySelector('span[data-minutes]'),
+    seconds: document.querySelector('span[data-seconds]'),
 }
 
+// console.dir(refs.seconds.textContent);
+
 ///різниця між часами
-let timestampDiff = 0;
+let selectedTimestamp = 0;
 
 ///об'єкт опцій для передачі в flatpickr
 const options = {
@@ -18,8 +24,7 @@ const options = {
       console.log('onClose: ',selectedDates[0]);
       ///додано
       const currentTimestamp = options.defaultDate.getTime();
-      const selectedTimestamp = selectedDates[0].getTime();
-      timestampDiff = selectedTimestamp - currentTimestamp;
+      selectedTimestamp = selectedDates[0].getTime();
 
 
       if (selectedTimestamp < currentTimestamp) {
@@ -49,12 +54,23 @@ refs.start.addEventListener('click', onStartClick)
 ////Функції
 
 function onStartClick(){
-console.log('onStartClick: ',timestampDiff);
-console.log(convertMs(timestampDiff));
+    const timerId = setInterval(setInterface,1000)
 }
 
 
+function setInterface() {
 
+    const curentTime = new Date();
+    ////в мілісекундах
+    const timeLeft = selectedTimestamp - curentTime.getTime();
+   
+    if (timeLeft > 0) {
+        refs.days.textContent = convertMs(timeLeft).days;
+        refs.hours.textContent = convertMs(timeLeft).hours;
+        refs.minutes.textContent = convertMs(timeLeft).minutes;
+        refs.seconds.textContent = convertMs(timeLeft).seconds;
+    }
+}
 
 
 function convertMs(ms) {
