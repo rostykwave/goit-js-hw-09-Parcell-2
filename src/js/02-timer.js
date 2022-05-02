@@ -57,18 +57,26 @@ function onStartClick(){
     const timerId = setInterval(setInterface,1000)
 }
 
+////Форматування значення
+function addLeadingZero(value) {
+    return value.toString().padStart(2, '0');
+}
 
+////Виведення в інтерфейс
 function setInterface() {
 
     const curentTime = new Date();
     ////в мілісекундах
-    const timeLeft = selectedTimestamp - curentTime.getTime();
+    const timeLeftInMs = selectedTimestamp - curentTime.getTime();
+    /////в об'єкті з розподілом на дні, години тощо
+    const timeLeft = convertMs(timeLeftInMs);
+    
    
-    if (timeLeft > 0) {
-        refs.days.textContent = convertMs(timeLeft).days;
-        refs.hours.textContent = convertMs(timeLeft).hours;
-        refs.minutes.textContent = convertMs(timeLeft).minutes;
-        refs.seconds.textContent = convertMs(timeLeft).seconds;
+    if (timeLeftInMs >= 0) {
+        refs.days.textContent = addLeadingZero(timeLeft.days);
+        refs.hours.textContent = addLeadingZero(timeLeft.hours);
+        refs.minutes.textContent = addLeadingZero(timeLeft.minutes);
+        refs.seconds.textContent = addLeadingZero(timeLeft.seconds);
     }
 }
 
