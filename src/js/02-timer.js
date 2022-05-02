@@ -54,7 +54,8 @@ refs.start.addEventListener('click', onStartClick)
 ////Функції
 
 function onStartClick(){
-    const timerId = setInterval(setInterface,1000)
+    const timerId = setInterval(setInterface, 1000);
+    refs.start.setAttribute('disabled', true);
 }
 
 ////Форматування значення
