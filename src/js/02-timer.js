@@ -12,7 +12,7 @@ const refs = {
 }
 
 ///вибрана дата
-let selectedTimestamp = 0;
+let selectedTime = 0;
 
 ///об'єкт опцій для передачі в flatpickr
 const options = {
@@ -23,11 +23,11 @@ const options = {
   onClose(selectedDates) {
       console.log('onClose: ',selectedDates[0]);
       ///додано
-      const currentTimestamp = options.defaultDate.getTime();
-      selectedTimestamp = selectedDates[0].getTime();
+      selectedTime = selectedDates[0].getTime();
+       const currentTime = Date.now();
 
 
-      if (selectedTimestamp < currentTimestamp) {
+      if (selectedTime < currentTime) {
         //   alert("Please choose a date in the future");
           Notify.warning('Please choose a date in the future');
           refs.start.setAttribute('disabled', true);
@@ -49,7 +49,8 @@ refs.start.addEventListener('click', onStartClick)
 ////Функції
 function onStartClick(){
     const timerId = setInterval(setInterface, 1000);
-    refs.start.setAttribute('disabled', true);
+    // refs.start.setAttribute('disabled', true);
+    this.setAttribute('disabled', true);
 }
 
 ////Форматування значення виводу в інтерфейс
@@ -60,18 +61,22 @@ function addLeadingZero(value) {
 ////Виведення в інтерфейс
 function setInterface() {
 
-    const curentTime = new Date();
+    const curentTime = Date.now();
     ////в мілісекундах
-    const timeLeftInMs = selectedTimestamp - curentTime.getTime();
-    /////в об'єкті з розподілом на дні, години тощо
-    const timeLeft = convertMs(timeLeftInMs);
+    const timeDelta = selectedTime - curentTime;
+
+    //об'єкт з розподілом на дні, години тощо
+    // const timeComponents = convertMs(timeDelta);
+
+    //Деструктуризація об'єкту timeComponents
+    const { days, hours, minutes, seconds } = convertMs(timeDelta);
     
    ////Перевірка, яка не дозволяє переходити на від'ємні значення відліку часу
-    if (timeLeftInMs >= 0) {
-        refs.days.textContent = addLeadingZero(timeLeft.days);
-        refs.hours.textContent = addLeadingZero(timeLeft.hours);
-        refs.minutes.textContent = addLeadingZero(timeLeft.minutes);
-        refs.seconds.textContent = addLeadingZero(timeLeft.seconds);
+    if (timeDelta >= 0) {
+        refs.days.textContent = addLeadingZero(days);
+        refs.hours.textContent = addLeadingZero(hours);
+        refs.minutes.textContent = addLeadingZero(minutes);
+        refs.seconds.textContent = addLeadingZero(seconds);
     }
 }
 
