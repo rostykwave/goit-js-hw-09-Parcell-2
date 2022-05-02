@@ -1,5 +1,7 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
 
 const refs = {
     start: document.querySelector('button[data-start]'),
@@ -9,9 +11,7 @@ const refs = {
     seconds: document.querySelector('span[data-seconds]'),
 }
 
-// console.dir(refs.seconds.textContent);
-
-///різниця між часами
+///вибрана дата
 let selectedTimestamp = 0;
 
 ///об'єкт опцій для передачі в flatpickr
@@ -28,7 +28,8 @@ const options = {
 
 
       if (selectedTimestamp < currentTimestamp) {
-          alert("Please choose a date in the future");
+        //   alert("Please choose a date in the future");
+          Notify.warning('Please choose a date in the future');
           refs.start.setAttribute('disabled', true);
       } else {
           refs.start.removeAttribute('disabled');        
@@ -39,26 +40,19 @@ const options = {
 
 
 
-
-
-///Основний функціонал - код виконання
+///Основний функціонал - виконання коду
 flatpickr("#datetime-picker", options);
 
 refs.start.addEventListener('click', onStartClick)
 
 
-
-
-
-
 ////Функції
-
 function onStartClick(){
     const timerId = setInterval(setInterface, 1000);
     refs.start.setAttribute('disabled', true);
 }
 
-////Форматування значення
+////Форматування значення виводу в інтерфейс
 function addLeadingZero(value) {
     return value.toString().padStart(2, '0');
 }
@@ -72,7 +66,7 @@ function setInterface() {
     /////в об'єкті з розподілом на дні, години тощо
     const timeLeft = convertMs(timeLeftInMs);
     
-   
+   ////Перевірка, яка не дозволяє переходити на від'ємні значення відліку часу
     if (timeLeftInMs >= 0) {
         refs.days.textContent = addLeadingZero(timeLeft.days);
         refs.hours.textContent = addLeadingZero(timeLeft.hours);
@@ -81,7 +75,7 @@ function setInterface() {
     }
 }
 
-
+///Функція для перетворення мілісекунд UNIX  в об'єкт з набором {день, година, хвилина, секунда}
 function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;
