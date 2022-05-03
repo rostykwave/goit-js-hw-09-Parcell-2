@@ -18,25 +18,6 @@ refs.form.addEventListener('submit', onFormSubmit);
 //increase delay on+step
 //notiflix
 
-
-
-// console.log(createPromise(2, 1500));
-
-// createPromise(2, 1500)
-//   .then(({ position, delay }) => {
-//     console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-//   })
-//   .catch(({ position, delay }) => {
-//     console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-//   }); 
-
-
-
-
-
-
-
-
   ////Functions
 
 function onFormSubmit(event) {
@@ -46,20 +27,25 @@ function onFormSubmit(event) {
 
     const formDataRaw = new FormData(event.currentTarget);
 
+    ///перебір масиву формдати і додавання елементів в об'єкт
     formDataRaw.forEach((value, name) => {
         formData[name] = value;
     })
-
     console.log(formData);
 
-    ///імітація циклу
-    const position = 1;
-    const delay = formData.delay;
 
-    console.log(delay);
+    ///приведення інпуту до числового значення
+    let delay = Number(formData.delay);
+    const amount = Number(formData.amount);
+    const step = Number(formData.step);
+
+    ////Цикл
+    for (let i = 0; i < amount; i += 1) {
+        ///встановлення позиції по-порядку від одиниці, а не від 0
+        const position = i+1;
 
 
-    ////виклик функції з промісами
+            ////виклик функції з промісами
     createPromise(position, delay).then(({ position, delay }) => {
     // console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
     Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
@@ -68,9 +54,16 @@ function onFormSubmit(event) {
     // console.log(`❌ Rejected promise ${position} in ${delay}ms`);
     Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
   });
-
-    
+        
+        
+        ///збільшення затримки на крок степ після виконання функції
+           delay += step;
+        
+    }
+ 
 }
+
+
 
 
 function createPromise(position, delay) {
